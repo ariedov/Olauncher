@@ -252,21 +252,13 @@ class AppDrawerFragment : Fragment() {
                         onTop = !recyclerView.canScrollVertically(-1)
                         if (onTop)
                             binding.search.hideKeyboard()
-                        else
-                            this@AppDrawerFragment.scrolling = true
                     }
 
-                    RecyclerView.SCROLL_STATE_SETTLING -> {
-                        this@AppDrawerFragment.scrolling = true
-                    }
 
                     RecyclerView.SCROLL_STATE_IDLE -> {
                         this@AppDrawerFragment.scrolling = false
                         if (!recyclerView.canScrollVertically(1))
                             binding.search.hideKeyboard()
-                        else if (!recyclerView.canScrollVertically(-1))
-                            if (!onTop && isRemoving.not())
-                                findNavController().popBackStack()
                     }
                 }
             }
