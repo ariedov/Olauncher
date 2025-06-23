@@ -43,7 +43,6 @@ class AppDrawerAdapter(
         }
     }
 
-    private var autoLaunch = true
     private var isBangSearch = false
     private val appFilter = createAppFilter()
     private val myUserHandle = android.os.Process.myUserHandle()
@@ -79,14 +78,11 @@ class AppDrawerAdapter(
     private fun createAppFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(charSearch: CharSequence?): FilterResults {
-                isBangSearch = charSearch?.startsWith("!") ?: false
-                autoLaunch = charSearch?.startsWith(" ")?.not() ?: true
+                isBangSearch = charSearch?.startsWith("!") == true
 
                 val appFilteredList = (if (charSearch.isNullOrBlank()) appsList
                 else appsList.filter { app ->
                     appLabelMatches(app.appLabel, charSearch)
-//                }.sortedByDescending {
-//                    charSearch.contentEquals(it.appLabel, true)
                 } as MutableList<AppModel>)
 
                 val filterResults = FilterResults()
@@ -100,23 +96,9 @@ class AppDrawerAdapter(
                     val items = it as MutableList<AppModel>
                     appFilteredList = items
                     submitList(appFilteredList) {
-                        autoLaunch()
                     }
                 }
             }
-        }
-    }
-
-    private fun autoLaunch() {
-        try {
-            if (itemCount == 1
-                && autoLaunch
-                && isBangSearch.not()
-                && flag == Constants.FLAG_LAUNCH_APP
-                && appFilteredList.size > 0
-            ) appClickListener(appFilteredList[0])
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 
