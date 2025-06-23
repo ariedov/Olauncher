@@ -625,9 +625,4 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         super.onDestroyView()
         _binding = null
     }
-
-    override fun onDestroy() {
-        viewModel.checkForMessages.call()
-        super.onDestroy()
-    }
 }

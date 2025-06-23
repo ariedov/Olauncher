@@ -9,10 +9,6 @@ object Constants {
 
     object Dialog {
         const val ABOUT = "ABOUT"
-        const val WALLPAPER = "WALLPAPER"
-        const val REVIEW = "REVIEW"
-        const val RATE = "RATE"
-        const val SHARE = "SHARE"
         const val HIDDEN = "HIDDEN"
         const val KEYBOARD = "KEYBOARD"
         const val DIGITAL_WELLBEING = "DIGITAL_WELLBEING"
@@ -20,10 +16,6 @@ object Constants {
 
     object UserState {
         const val START = "START"
-        const val WALLPAPER = "WALLPAPER"
-        const val REVIEW = "REVIEW"
-        const val RATE = "RATE"
-        const val SHARE = "SHARE"
     }
 
     object DateTime {

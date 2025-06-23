@@ -133,54 +133,11 @@ class MainActivity : AppCompatActivity() {
             else
                 showLauncherSelector(Constants.REQUEST_CODE_LAUNCHER_SELECTOR)
         }
-        viewModel.checkForMessages.observe(this) {
-            checkForMessages()
-        }
         viewModel.showDialog.observe(this) {
             when (it) {
                 Constants.Dialog.ABOUT -> {
                     showMessageDialog(getString(R.string.app_name), getString(R.string.welcome_to_olauncher_settings), getString(R.string.okay)) {
                         binding.messageLayout.visibility = View.GONE
-                    }
-                }
-
-                Constants.Dialog.WALLPAPER -> {
-                    prefs.wallpaperMsgShown = true
-                    prefs.userState = Constants.UserState.REVIEW
-                    showMessageDialog(getString(R.string.did_you_know), getString(R.string.wallpaper_message), getString(R.string.enable)) {
-                        binding.messageLayout.visibility = View.GONE
-                        prefs.dailyWallpaper = true
-                        viewModel.setWallpaperWorker()
-                        showToast(getString(R.string.your_wallpaper_will_update_shortly))
-                    }
-                }
-
-                Constants.Dialog.REVIEW -> {
-                    prefs.userState = Constants.UserState.RATE
-                    showMessageDialog(getString(R.string.hey), getString(R.string.review_message), getString(R.string.leave_a_review)) {
-                        binding.messageLayout.visibility = View.GONE
-                        prefs.rateClicked = true
-                        showToast("😇❤️")
-                        rateApp()
-                    }
-                }
-
-                Constants.Dialog.RATE -> {
-                    prefs.userState = Constants.UserState.SHARE
-                    showMessageDialog(getString(R.string.app_name), getString(R.string.rate_us_message), getString(R.string.rate_now)) {
-                        binding.messageLayout.visibility = View.GONE
-                        prefs.rateClicked = true
-                        showToast("🤩❤️")
-                        rateApp()
-                    }
-                }
-
-                Constants.Dialog.SHARE -> {
-                    prefs.shareShownTime = System.currentTimeMillis()
-                    showMessageDialog(getString(R.string.hey), getString(R.string.share_message), getString(R.string.share_now)) {
-                        binding.messageLayout.visibility = View.GONE
-                        showToast("😊❤️")
-                        shareApp()
                     }
                 }
 
@@ -211,48 +168,6 @@ class MainActivity : AppCompatActivity() {
         binding.tvAction.text = action
         binding.tvAction.setOnClickListener { clickListener() }
         binding.messageLayout.visibility = View.VISIBLE
-    }
-
-    private fun checkForMessages() {
-        if (prefs.firstOpenTime == 0L)
-            prefs.firstOpenTime = System.currentTimeMillis()
-
-        when (prefs.userState) {
-            Constants.UserState.START -> {
-                if (prefs.firstOpenTime.hasBeenMinutes(10))
-                    prefs.userState = Constants.UserState.WALLPAPER
-            }
-
-            Constants.UserState.WALLPAPER -> {
-                if (prefs.wallpaperMsgShown || prefs.dailyWallpaper)
-                    prefs.userState = Constants.UserState.REVIEW
-                else if (isOlauncherDefault(this))
-                    viewModel.showDialog.postValue(Constants.Dialog.WALLPAPER)
-            }
-
-            Constants.UserState.REVIEW -> {
-                if (prefs.rateClicked)
-                    prefs.userState = Constants.UserState.SHARE
-                else if (isOlauncherDefault(this) && prefs.firstOpenTime.hasBeenHours(1))
-                    viewModel.showDialog.postValue(Constants.Dialog.REVIEW)
-            }
-
-            Constants.UserState.RATE -> {
-                if (prefs.rateClicked)
-                    prefs.userState = Constants.UserState.SHARE
-                else if (isOlauncherDefault(this)
-                    && prefs.firstOpenTime.isDaySince() >= 7
-                    && Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 16
-                ) viewModel.showDialog.postValue(Constants.Dialog.RATE)
-            }
-
-            Constants.UserState.SHARE -> {
-                if (isOlauncherDefault(this) && prefs.firstOpenTime.hasBeenDays(14)
-                    && prefs.shareShownTime.isDaySince() >= 70
-                    && Calendar.getInstance().get(Calendar.HOUR_OF_DAY) >= 16
-                ) viewModel.showDialog.postValue(Constants.Dialog.SHARE)
-            }
-        }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")

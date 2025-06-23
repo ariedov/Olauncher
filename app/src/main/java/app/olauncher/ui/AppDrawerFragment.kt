@@ -164,19 +164,7 @@ class AppDrawerFragment : Fragment() {
             }
         )
 
-        linearLayoutManager = object : LinearLayoutManager(requireContext()) {
-            override fun scrollVerticallyBy(
-                dx: Int,
-                recycler: Recycler,
-                state: RecyclerView.State,
-            ): Int {
-                val scrollRange = super.scrollVerticallyBy(dx, recycler, state)
-                val overScroll = dx - scrollRange
-                if (overScroll < -10 && binding.recyclerView.scrollState == RecyclerView.SCROLL_STATE_DRAGGING)
-                    checkMessageAndExit()
-                return scrollRange
-            }
-        }
+        linearLayoutManager = LinearLayoutManager(requireContext())
 
         binding.recyclerView.layoutManager = linearLayoutManager
         binding.recyclerView.adapter = adapter
@@ -262,12 +250,6 @@ class AppDrawerFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun checkMessageAndExit() {
-        findNavController().popBackStack()
-        if (flag == Constants.FLAG_LAUNCH_APP)
-            viewModel.checkForMessages.call()
     }
 
     override fun onStart() {
