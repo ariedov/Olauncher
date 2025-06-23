@@ -1,7 +1,6 @@
 package app.olauncher
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -21,26 +20,16 @@ import app.olauncher.data.Constants
 import app.olauncher.data.Prefs
 import app.olauncher.databinding.ActivityMainBinding
 import app.olauncher.helper.getColorFromAttr
-import app.olauncher.helper.hasBeenDays
-import app.olauncher.helper.hasBeenHours
-import app.olauncher.helper.hasBeenMinutes
 import app.olauncher.helper.isDarkThemeOn
-import app.olauncher.helper.isDaySince
 import app.olauncher.helper.isDefaultLauncher
 import app.olauncher.helper.isEinkDisplay
-import app.olauncher.helper.isOlauncherDefault
 import app.olauncher.helper.isTablet
-import app.olauncher.helper.openUrl
-import app.olauncher.helper.rateApp
 import app.olauncher.helper.resetLauncherViaFakeActivity
 import app.olauncher.helper.setPlainWallpaper
-import app.olauncher.helper.shareApp
 import app.olauncher.helper.showLauncherSelector
-import app.olauncher.helper.showToast
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -212,12 +201,12 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             Constants.REQUEST_CODE_ENABLE_ADMIN -> {
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == RESULT_OK)
                     prefs.lockModeOn = true
             }
 
             Constants.REQUEST_CODE_LAUNCHER_SELECTOR -> {
-                if (resultCode == Activity.RESULT_OK)
+                if (resultCode == RESULT_OK)
                     resetLauncherViaFakeActivity()
             }
         }
