@@ -1,6 +1,7 @@
 package app.olauncher.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import app.olauncher.helper.openUrl
 import app.olauncher.helper.showKeyboard
 import app.olauncher.helper.showToast
 import app.olauncher.helper.uninstall
+import kotlin.math.abs
 
 
 class AppDrawerFragment : Fragment() {
@@ -173,9 +175,13 @@ class AppDrawerFragment : Fragment() {
             ): Int {
                 val scrollRange = super.scrollVerticallyBy(dy, recycler, state)
                 val overscroll: Int = dy - scrollRange
-                if (overscroll < -45) {
+                if (overscroll < 0 && scrolling.not()) {
+                    Log.d("AppDrawer", "Overscroll $overscroll. Scroll Range $scrollRange")
                     binding.search.hideKeyboard()
-                    findNavController().popBackStack()
+                    binding.root.alpha -= abs(overscroll.toFloat()) / 100
+                    if (binding.root.alpha <= 0.5f) {
+                        findNavController().popBackStack()
+                    }
                 }
                 return scrollRange
             }
@@ -184,6 +190,7 @@ class AppDrawerFragment : Fragment() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.addOnScrollListener(getRecyclerViewOnScrollListener())
         binding.recyclerView.itemAnimator = null
+        binding.recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         if (requireContext().isEinkDisplay().not())
             binding.recyclerView.layoutAnimation =
                 AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.layout_anim_from_bottom)
@@ -250,15 +257,22 @@ class AppDrawerFragment : Fragment() {
 
                     RecyclerView.SCROLL_STATE_DRAGGING -> {
                         onTop = !recyclerView.canScrollVertically(-1)
-                        if (onTop)
+                        if (onTop) {
                             binding.search.hideKeyboard()
+                        } else {
+                            this@AppDrawerFragment.scrolling = true
+                        }
                     }
 
+                    RecyclerView.SCROLL_STATE_SETTLING -> {
+                        this@AppDrawerFragment.scrolling = true
+                    }
 
                     RecyclerView.SCROLL_STATE_IDLE -> {
                         this@AppDrawerFragment.scrolling = false
-                        if (!recyclerView.canScrollVertically(1))
+                        if (!recyclerView.canScrollVertically(1)) {
                             binding.search.hideKeyboard()
+                        }
                     }
                 }
             }
