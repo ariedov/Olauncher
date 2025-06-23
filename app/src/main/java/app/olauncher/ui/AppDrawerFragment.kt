@@ -179,7 +179,7 @@ class AppDrawerFragment : Fragment() {
                     Log.d("AppDrawer", "Overscroll $overscroll. Scroll Range $scrollRange")
                     binding.search.hideKeyboard()
                     binding.root.alpha -= abs(overscroll.toFloat()) / 100
-                    if (binding.root.alpha <= 0.5f) {
+                    if (binding.root.alpha <= 0.7f) {
                         findNavController().popBackStack()
                     }
                 }
