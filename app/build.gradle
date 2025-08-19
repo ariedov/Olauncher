@@ -6,7 +6,7 @@ def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -18,9 +18,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "app.olauncher"
+        applicationId "com.dleibovych.launcher"
         minSdkVersion 24
-        targetSdkVersion 35
+        targetSdkVersion 36
         versionCode 92
         versionName "v5.3.2"
 

@@ -191,17 +191,9 @@ class Prefs(context: Context) {
         get() = prefs.getBoolean(HIDDEN_APPS_UPDATED, false)
         set(value) = prefs.edit().putBoolean(HIDDEN_APPS_UPDATED, value).apply()
 
-    var toShowHintCounter: Int
-        get() = prefs.getInt(SHOW_HINT_COUNTER, 1)
-        set(value) = prefs.edit().putInt(SHOW_HINT_COUNTER, value).apply()
-
     var aboutClicked: Boolean
         get() = prefs.getBoolean(ABOUT_CLICKED, false)
         set(value) = prefs.edit().putBoolean(ABOUT_CLICKED, value).apply()
-
-    var rateClicked: Boolean
-        get() = prefs.getBoolean(RATE_CLICKED, false)
-        set(value) = prefs.edit().putBoolean(RATE_CLICKED, value).apply()
 
     var wallpaperMsgShown: Boolean
         get() = prefs.getBoolean(WALLPAPER_MSG_SHOWN, false)
