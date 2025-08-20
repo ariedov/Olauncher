@@ -1,4 +1,4 @@
-package app.olauncher.helper
+package app.dlauncher.helper
 
 import android.annotation.SuppressLint
 import android.app.SearchManager
@@ -35,11 +35,11 @@ import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
-import app.olauncher.BuildConfig
-import app.olauncher.R
-import app.olauncher.data.AppModel
-import app.olauncher.data.Constants
-import app.olauncher.data.Prefs
+import app.dlauncher.BuildConfig
+import app.dlauncher.R
+import app.dlauncher.data.AppModel
+import app.dlauncher.data.Constants
+import app.dlauncher.data.Prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject

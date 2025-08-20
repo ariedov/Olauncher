@@ -1,4 +1,4 @@
-package app.olauncher.ui
+package app.dlauncher.ui
 
 import android.content.Context
 import android.os.UserHandle
@@ -14,13 +14,13 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import app.olauncher.R
-import app.olauncher.data.AppModel
-import app.olauncher.data.Constants
-import app.olauncher.databinding.AdapterAppDrawerBinding
-import app.olauncher.helper.hideKeyboard
-import app.olauncher.helper.isSystemApp
-import app.olauncher.helper.showKeyboard
+import app.dlauncher.R
+import app.dlauncher.data.AppModel
+import app.dlauncher.data.Constants
+import app.dlauncher.databinding.AdapterAppDrawerBinding
+import app.dlauncher.helper.hideKeyboard
+import app.dlauncher.helper.isSystemApp
+import app.dlauncher.helper.showKeyboard
 import java.text.Normalizer
 
 class AppDrawerAdapter(

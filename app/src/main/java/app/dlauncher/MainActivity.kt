@@ -1,4 +1,4 @@
-package app.olauncher
+package app.dlauncher
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,17 +16,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import app.olauncher.data.Constants
-import app.olauncher.data.Prefs
-import app.olauncher.databinding.ActivityMainBinding
-import app.olauncher.helper.getColorFromAttr
-import app.olauncher.helper.isDarkThemeOn
-import app.olauncher.helper.isDefaultLauncher
-import app.olauncher.helper.isEinkDisplay
-import app.olauncher.helper.isTablet
-import app.olauncher.helper.resetLauncherViaFakeActivity
-import app.olauncher.helper.setPlainWallpaper
-import app.olauncher.helper.showLauncherSelector
+import app.dlauncher.data.Constants
+import app.dlauncher.data.Prefs
+import app.dlauncher.databinding.ActivityMainBinding
+import app.dlauncher.helper.getColorFromAttr
+import app.dlauncher.helper.isDarkThemeOn
+import app.dlauncher.helper.isDefaultLauncher
+import app.dlauncher.helper.isEinkDisplay
+import app.dlauncher.helper.isTablet
+import app.dlauncher.helper.resetLauncherViaFakeActivity
+import app.dlauncher.helper.setPlainWallpaper
+import app.dlauncher.helper.showLauncherSelector
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -1,11 +1,11 @@
-package app.olauncher.helper
+package app.dlauncher.helper
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import app.olauncher.data.Constants
-import app.olauncher.data.Prefs
+import app.dlauncher.data.Constants
+import app.dlauncher.data.Prefs
 import kotlinx.coroutines.coroutineScope
 
 class WallpaperWorker(appContext: Context, workerParams: WorkerParameters) : CoroutineWorker(appContext, workerParams) {

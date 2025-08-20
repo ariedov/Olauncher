@@ -1,4 +1,4 @@
-package app.olauncher
+package app.dlauncher
 
 import android.app.Application
 import android.app.Service.USAGE_STATS_SERVICE
@@ -8,6 +8,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.os.UserHandle
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,19 +18,21 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import app.olauncher.data.AppModel
-import app.olauncher.data.Constants
-import app.olauncher.data.Prefs
-import app.olauncher.helper.AppUsageStats
-import app.olauncher.helper.AppUsageStatsBucket
-import app.olauncher.helper.SingleLiveEvent
-import app.olauncher.helper.WallpaperWorker
-import app.olauncher.helper.convertEpochToMidnight
-import app.olauncher.helper.formattedTimeSpent
-import app.olauncher.helper.getAppsList
-import app.olauncher.helper.hasBeenMinutes
-import app.olauncher.helper.isOlauncherDefault
-import app.olauncher.helper.showToast
+import app.dlauncher.data.AppModel
+import app.dlauncher.data.Constants
+import app.dlauncher.data.Prefs
+import app.dlauncher.helper.AppUsageStats
+import app.dlauncher.helper.AppUsageStatsBucket
+import app.dlauncher.helper.SingleLiveEvent
+import app.dlauncher.helper.WallpaperWorker
+import app.dlauncher.helper.convertEpochToMidnight
+import app.dlauncher.helper.formattedTimeSpent
+import app.dlauncher.helper.getAppsList
+import app.dlauncher.helper.hasBeenMinutes
+import app.dlauncher.helper.isOlauncherDefault
+import app.dlauncher.helper.showToast
+import com.google.android.play.core.integrity.IntegrityManagerFactory
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -52,6 +55,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val showDialog = SingleLiveEvent<String>()
     val resetLauncherLiveData = SingleLiveEvent<Unit?>()
+
+    val integrityManager = IntegrityManagerFactory.createStandard(application.applicationContext)
 
     fun selectedApp(appModel: AppModel, flag: Int) {
         when (flag) {
@@ -158,6 +163,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun firstOpen(value: Boolean) {
+        collectPlayIntegrityData()
+
         firstOpen.postValue(value)
     }
 
@@ -349,5 +356,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val viewTimeSpent = appContext.formattedTimeSpent((totalTimeInMillis * 1.1).toLong())
         screenTimeValue.postValue(viewTimeSpent)
         prefs.screenTimeLastUpdated = endTime
+    }
+
+    fun collectPlayIntegrityData() {
+        Log.d(TAG, "Collecting integrity data")
+        integrityManager.prepareIntegrityToken(
+            StandardIntegrityManager.PrepareIntegrityTokenRequest.builder()
+                .setCloudProjectNumber(GC_PROJECT_NUMBER)
+                .build()
+        ).addOnSuccessListener { tokenProvider ->
+            tokenProvider.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest
+                    .builder()
+                    .build()
+            )
+                .addOnSuccessListener { response ->
+                    val token = response.token()
+                    Log.d(TAG, "Play Integrity Token $token")
+                }
+                .addOnFailureListener {
+                    Log.e(TAG, "Failure using integrity token request")
+                }
+        }.addOnFailureListener {
+            Log.e(TAG, "Failure preparing integrity token")
+        }
+    }
+
+    companion object {
+
+        const val TAG = "MainViewModel"
+        const val GC_PROJECT_NUMBER = 217581068227
     }
 }

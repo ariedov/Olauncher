@@ -1,4 +1,4 @@
-package app.olauncher.ui
+package app.dlauncher.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -13,20 +13,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.olauncher.MainViewModel
-import app.olauncher.R
-import app.olauncher.data.Constants
-import app.olauncher.data.Prefs
-import app.olauncher.databinding.FragmentAppDrawerBinding
-import app.olauncher.helper.hideKeyboard
-import app.olauncher.helper.isEinkDisplay
-import app.olauncher.helper.isSystemApp
-import app.olauncher.helper.openAppInfo
-import app.olauncher.helper.openSearch
-import app.olauncher.helper.openUrl
-import app.olauncher.helper.showKeyboard
-import app.olauncher.helper.showToast
-import app.olauncher.helper.uninstall
+import app.dlauncher.MainViewModel
+import app.dlauncher.R
+import app.dlauncher.data.Constants
+import app.dlauncher.data.Prefs
+import app.dlauncher.databinding.FragmentAppDrawerBinding
+import app.dlauncher.helper.hideKeyboard
+import app.dlauncher.helper.isEinkDisplay
+import app.dlauncher.helper.isSystemApp
+import app.dlauncher.helper.openAppInfo
+import app.dlauncher.helper.openSearch
+import app.dlauncher.helper.openUrl
+import app.dlauncher.helper.showKeyboard
+import app.dlauncher.helper.showToast
+import app.dlauncher.helper.uninstall
 import kotlin.math.abs
 
 

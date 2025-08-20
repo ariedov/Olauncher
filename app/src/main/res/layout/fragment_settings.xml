@@ -956,6 +956,23 @@
                     android:maxLines="1"
                     android:padding="10dp"
                     android:text="@string/privacy" />
+
+                <ImageView
+                    android:id="@+id/verification_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="verification icon for google play integrity"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/integrity_verdict"
+                    style="@style/TextSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:padding="10dp"
+                    android:text="@string/integrity_okay" />
             </LinearLayout>
 
             <TextView

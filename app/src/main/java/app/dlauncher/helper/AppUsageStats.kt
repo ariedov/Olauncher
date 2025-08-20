@@ -1,4 +1,4 @@
-package app.olauncher.helper
+package app.dlauncher.helper
 
 import android.os.Build
 import androidx.annotation.RequiresApi
