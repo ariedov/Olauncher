@@ -28,4 +28,10 @@
     <color name="blackInverseTrans80">#CCFFFFFF</color>
     <color name="blackInverseTrans90">#E6FFFFFF</color>
 
+    <!-- Green -->
+    <color name="green">#05DF72</color>
+
+    <!-- Red -->
+    <color name="red">#E7000B</color>
+
 </resources>

@@ -34,6 +34,13 @@ import app.dlauncher.helper.showToast
 import com.google.android.play.core.integrity.IntegrityManagerFactory
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import kotlinx.coroutines.launch
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import okio.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
@@ -53,10 +60,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val homeAppAlignment = MutableLiveData<Int>()
     val screenTimeValue = MutableLiveData<String>()
 
+    val integrityOk = MutableLiveData<Boolean>()
+
     val showDialog = SingleLiveEvent<String>()
     val resetLauncherLiveData = SingleLiveEvent<Unit?>()
 
     val integrityManager = IntegrityManagerFactory.createStandard(application.applicationContext)
+
+    val okHttpClient = OkHttpClient()
 
     fun selectedApp(appModel: AppModel, flag: Int) {
         when (flag) {
@@ -358,7 +369,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         prefs.screenTimeLastUpdated = endTime
     }
 
-    fun collectPlayIntegrityData() {
+    private fun collectPlayIntegrityData() {
         Log.d(TAG, "Collecting integrity data")
         integrityManager.prepareIntegrityToken(
             StandardIntegrityManager.PrepareIntegrityTokenRequest.builder()
@@ -372,6 +383,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             )
                 .addOnSuccessListener { response ->
                     val token = response.token()
+                    sendToken(token)
                     Log.d(TAG, "Play Integrity Token $token")
                 }
                 .addOnFailureListener {
@@ -380,6 +392,33 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }.addOnFailureListener {
             Log.e(TAG, "Failure preparing integrity token")
         }
+    }
+
+    private fun sendToken(token: String) {
+        val body =
+            """{
+                "integrity_token": "$token"
+            }""".toRequestBody()
+
+        val request = Request.Builder()
+            .url("https://integrity-token-decode.dev.statsd.io/data")
+            .post(body)
+            .build()
+
+        okHttpClient.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e(TAG, "Failure sending the request", e)
+
+                integrityOk.postValue(false)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                Log.d(TAG, "Successfully sent token ${response.body.string()}")
+
+                // simplified okay
+                integrityOk.postValue(true)
+            }
+        })
     }
 
     companion object {

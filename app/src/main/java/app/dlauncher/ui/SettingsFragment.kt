@@ -15,10 +15,13 @@ import android.view.ViewGroup
 import android.view.WindowInsets
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import app.dlauncher.BuildConfig
 import app.dlauncher.MainViewModel
@@ -255,6 +258,9 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
         }
         viewModel.updateSwipeApps.observe(viewLifecycleOwner) {
             populateSwipeApps()
+        }
+        viewModel.integrityOk.observe(viewLifecycleOwner) {
+            populateIntegrityData(it)
         }
     }
 
@@ -573,6 +579,21 @@ class SettingsFragment : Fragment(), View.OnClickListener, View.OnLongClickListe
             binding.swipeLeftApp.setTextColor(requireContext().getColorFromAttr(R.attr.primaryColorTrans50))
         if (!prefs.swipeRightEnabled)
             binding.swipeRightApp.setTextColor(requireContext().getColorFromAttr(R.attr.primaryColorTrans50))
+    }
+
+    private fun populateIntegrityData(integrityOk: Boolean) {
+        if (integrityOk) {
+            binding.integrityVerdict?.setText(R.string.integrity_okay)
+
+            val wrappedDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_check)!!.mutate()
+            DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(requireContext(), R.color.green))
+            binding.verificationIcon?.setImageDrawable(wrappedDrawable)
+        } else {
+            binding.integrityVerdict?.setText(R.string.integrity_error)
+            val wrappedDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.ic_close)!!.mutate()
+            DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(requireContext(), R.color.red))
+            binding.verificationIcon?.setImageDrawable(wrappedDrawable)
+        }
     }
 
 //    private fun populateDigitalWellbeing() {
