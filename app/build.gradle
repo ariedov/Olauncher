@@ -21,8 +21,8 @@ android {
         applicationId "com.dleibovych.launcher"
         minSdkVersion 24
         targetSdkVersion 36
-        versionCode 3
-        versionName "v1.0.2"
+        versionCode 4
+        versionName "v1.0.3"
 
         resourceConfigurations += ["en", "ar", "de", "es-rES", "es-rUS", "fr", "hr", "hu", "in", "it", "ja", "pl", "pt-rBR", "ru-rRU", "sv", "tr", "uk", "zh"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -58,7 +58,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: "libs", include: ["*.aar"])
+
     implementation libs.kotlin.stdlib
     implementation libs.core.ktx
     implementation libs.appcompat

@@ -8,7 +8,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.pm.LauncherApps
 import android.os.UserHandle
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -31,12 +30,10 @@ import app.dlauncher.helper.getAppsList
 import app.dlauncher.helper.hasBeenMinutes
 import app.dlauncher.helper.isOlauncherDefault
 import app.dlauncher.helper.showToast
-import com.google.android.play.core.integrity.IntegrityManagerFactory
-import com.google.android.play.core.integrity.StandardIntegrityManager
+import io.securero.collector2.Collector
 import kotlinx.coroutines.launch
 import okhttp3.Call
 import okhttp3.Callback
-import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
@@ -65,9 +62,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val showDialog = SingleLiveEvent<String>()
     val resetLauncherLiveData = SingleLiveEvent<Unit?>()
 
-    val integrityManager = IntegrityManagerFactory.createStandard(application.applicationContext)
-
-    val okHttpClient = OkHttpClient()
+    val collector = Collector(appContext)
 
     fun selectedApp(appModel: AppModel, flag: Int) {
         when (flag) {
@@ -370,60 +365,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun collectPlayIntegrityData() {
-        Log.d(TAG, "Collecting integrity data")
-        integrityManager.prepareIntegrityToken(
-            StandardIntegrityManager.PrepareIntegrityTokenRequest.builder()
-                .setCloudProjectNumber(GC_PROJECT_NUMBER)
-                .build()
-        ).addOnSuccessListener { tokenProvider ->
-            tokenProvider.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest
-                    .builder()
-                    .build()
-            )
-                .addOnSuccessListener { response ->
-                    val token = response.token()
-                    sendToken(token)
-                    Log.d(TAG, "Play Integrity Token $token")
-                }
-                .addOnFailureListener {
-                    Log.e(TAG, "Failure using integrity token request")
-                }
-        }.addOnFailureListener {
-            Log.e(TAG, "Failure preparing integrity token")
-        }
-    }
-
-    private fun sendToken(token: String) {
-        val body =
-            """{
-                "integrity_token": "$token"
-            }""".toRequestBody()
-
-        val request = Request.Builder()
-            .url("https://integrity-token-decode.dev.statsd.io/data")
-            .post(body)
-            .build()
-
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.e(TAG, "Failure sending the request", e)
-
-                integrityOk.postValue(false)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                Log.d(TAG, "Successfully sent token ${response.body.string()}")
-
-                // simplified okay
-                integrityOk.postValue(true)
-            }
-        })
-    }
-
-    companion object {
-
-        const val TAG = "MainViewModel"
-        const val GC_PROJECT_NUMBER = 217581068227
+        collector.collect()
     }
 }
